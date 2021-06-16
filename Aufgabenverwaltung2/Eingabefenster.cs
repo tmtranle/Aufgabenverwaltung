@@ -97,10 +97,30 @@ namespace ReStartAufgabenverwaltung
             zuBearbeiten.Mitarbeiter = mitarbeiter;
             zuBearbeiten.Erledigungsgrad = erledigungsgrad;
 
+            // Server kontaktieren
+            conn.Open();
+            MySqlCommand cmd = conn.CreateCommand();
+            
+            cmd.CommandText = "UPDATE Aufgabe SET Bezeichnung = @bezeichnung" +
+                ", Abgabedatum = @abgabedatum" +
+                ", Mitarbeiter = @mitarbeiter" +
+                ", Erledigungsgrad = @erledigungsgrad " +
+                "WHERE ID = " + zuBearbeiten.Id;
+
+            //cmd.CommandText = "UPDATE Aufgabe SET Bezeichnung = @bezeichnung WHERE ID = " + zuBearbeiten.Id;
+            //cmd.CommandText = "UPDATE Aufgabe SET Abgabedatum = @abgabedatum WHERE ID = " + zuBearbeiten.Id;
+            //cmd.CommandText = "UPDATE Aufgabe SET Mitarbeiter = @mitarbeiter WHERE ID = " + zuBearbeiten.Id;
+            //cmd.CommandText = "UPDATE Aufgabe SET Erledigungsgrad = @erledigungsgrad WHERE ID = " + zuBearbeiten.Id;
+
+            cmd.Parameters.AddWithValue("Bezeichnung", bezeichnung);
+            cmd.Parameters.AddWithValue("Abgabedatum", abgabedatum);
+            cmd.Parameters.AddWithValue("Mitarbeiter", mitarbeiter);
+            cmd.Parameters.AddWithValue("Erledigungsgrad", erledigungsgrad);
+            cmd.Prepare();
+            cmd.ExecuteNonQuery();
             DialogResult = DialogResult.OK;
-
-            Close();
-
+            this.Close();
+            conn.Close();
         }
     }
 }
